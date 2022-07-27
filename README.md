@@ -1,2 +1,2 @@
-# LaiderSim
+# LiDARSim
 LiDARのシュミレーションです
