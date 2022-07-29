@@ -8,7 +8,7 @@ namespace HUBONE
     public class LiDAR : MonoBehaviour
     {
         private TestDrawMesh Indirectmesh;
-        private List<Vector3> hitPositions;
+        public List<Vector3> hitPositions { get; protected set; }
 
         public float thetaRange;
         public float phirange;
@@ -30,11 +30,11 @@ namespace HUBONE
         // Update is called once per frame
         void Update()
         {
-            Ray2CSV();
+            RayCast();
             this.transform.LookAt(arm.transform);
         }
 
-        void Ray2CSV()
+        void RayCast()
         {
             hitPositions.Clear();
 
@@ -42,7 +42,6 @@ namespace HUBONE
             Debug.DrawRay(this.transform.position, forward, Color.blue);
 
             SphericalCoordinates forvec = Convert2SphericalCoordinates(forward);
-
 
             SphericalCoordinates rayvec = Convert2SphericalCoordinates(forward);
 
