@@ -15,18 +15,23 @@ namespace HUBONE
 
         public float deltatheta;
         public float deltaphi;
+
+        GameObject arm;
         // Start is called before the first frame update
         void Start()
         {
             hitPositions = new List<Vector3>();
+            
             GameObject drawIndirectObj = GameObject.Find("DrawIndirect");
             Indirectmesh = drawIndirectObj.GetComponent<TestDrawMesh>();
+            arm = GameObject.Find("Capsule");
         }
 
         // Update is called once per frame
         void Update()
         {
             Ray2CSV();
+            this.transform.LookAt(arm.transform);
         }
 
         void Ray2CSV()
@@ -48,9 +53,10 @@ namespace HUBONE
                 for (int j = 0; j < thetaRange/deltatheta; j++)
                 {
                     rayvec.theta = forvec.theta - (thetaRange / deltatheta)/2 + j * deltatheta;
-                    Debug.DrawRay(this.transform.position,
-                        Convert2CatesianCoordinates(rayvec),
-                        Color.blue);
+                    if (i == 0 || j == 0 || i > phirange / deltaphi - 2 || j > thetaRange / deltatheta - 2)
+                    {
+                        Debug.DrawRay(this.transform.position,Convert2CatesianCoordinates(rayvec),Color.blue);
+                    }
                     RaycastHit hit;
                     if (Physics.Raycast(this.transform.position,Convert2CatesianCoordinates(rayvec),out hit, 10f))
                     {
