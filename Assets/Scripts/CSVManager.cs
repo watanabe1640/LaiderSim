@@ -10,40 +10,46 @@ namespace HUBONE
     {
         private StreamWriter sw;
 
-        private GameObject capsule;
+        public GameObject capsule;
+
+        public int startCSVnum;
+        int startnum; 
 
         private LiDAR lidar;
+
+        private int time_count;
 
         // Start is called before the first frame update
         void Start()
         {
-            capsule = GameObject.Find("Capsule");
+            time_count = 0;
 
             GameObject lidarObj = GameObject.Find("LiDAR");
             lidar = lidarObj.GetComponent<LiDAR>();
 
-            InitializeCSV();
+            startnum = 0;
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.B))
+            if (time_count == 60)
             {
+                InitializeCSV();
+                MoveCapsule();
                 WriteCSV();
-            }
-            if (Input.GetKeyDown(KeyCode.Return))
-            {
                 sw.Close();
+                time_count = 0;
+                startnum++;
             }
+            time_count++;
         }
 
         void InitializeCSV()
         {
-            sw = new StreamWriter(@"SaveData.csv", false, Encoding.GetEncoding("Shift_JIS"));
+            sw = new StreamWriter($@"Assets/CSVs/capsule{startCSVnum+startnum}.csv", false, Encoding.GetEncoding("Shift_JIS"));
 
-            string[] s1 = { "x", "y", "z" };
-            string s2 = string.Join(",", s1);
+            string s2 = "x,y,z";
             sw.WriteLine(s2);
 
             Vector3 point = capsule.transform.position;
@@ -60,6 +66,19 @@ namespace HUBONE
                 string s_out = string.Join(",", s_in);
                 sw.WriteLine(s_out);
             }
+        }
+        void MoveCapsule()
+        {
+            Vector3 position = new Vector3(
+                Random.Range(-0.4f, 0.4f), 
+                Random.Range(0.45f, 2.1f),
+                Random.Range(-0.4f, 0.4f));
+            Vector3 rot = new Vector3(
+                Random.Range(0.0f, 360.0f),
+                Random.Range(0.0f, 360.0f),
+                Random.Range(0.0f, 360.0f));
+            capsule.transform.position = position;
+            capsule.transform.rotation = Quaternion.Euler(rot);
         }
     }
 
